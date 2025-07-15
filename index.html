@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Day for My Universe</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        /* === BASIC SETUP === */
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #fca311;
+            --background-color: #14213d;
+            --text-color: #e5e5e5;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-body);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow: hidden; /* Hide scrollbars until content is revealed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* === STARRY BACKGROUND === */
+        #star-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* === INTRO SCREEN === */
+        #intro-screen {
+            text-align: center;
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .intro-text {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin: 10px 0;
+            color: var(--primary-color);
+        }
+
+        #open-button {
+            font-family: var(--font-body);
+            font-weight: 400;
+            font-size: 1rem;
+            color: var(--primary-color);
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease-out;
+            transition-delay: 2.5s;
+            box-shadow: 0 0 15px 0 var(--secondary-color);
+        }
+
+        #open-button:hover {
+            background: var(--secondary-color);
+            color: var(--background-color);
+            transform: translateY(25px) scale(1.05);
+        }
+        
+        /* === MAIN CONTENT === */
+        #main-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.5s ease-in;
+            padding: 50px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content-card {
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 700px;
+            width: 90%;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .content-card h1 {
+            font-family: var(--font-display);
+            color: var(--secondary-color);
+            font-size: clamp(2rem, 6vw, 3rem);
+            margin-top: 0;
+        }
+        
+        .content-card h2 {
+            font-family: var(--font-display);
+            color: var(--primary-color);
+            font-size: clamp(1.5rem, 5vw, 2rem);
+        }
+
+        .content-card p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            line-height: 1.8;
+        }
+        
+        /* === PHOTO GALLERY === */
+        .gallery-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 30px auto;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .gallery-slide {
+            display: none;
+        }
+
+        .gallery-slide img {
+            width: 100%;
+            display: block;
+        }
+
+        .gallery-nav {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.6s ease;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background-color: rgba(252, 163, 17, 0.8);
+        }
+
+        .dots-container {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+
+        .active, .dot:hover {
+            background-color: var(--secondary-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="star-container"></div>
+
+    <div id="intro-screen">
+        <div class="intro-text" id="intro1">Untuk alam semestaku,</div>
+        <div class="intro-text" id="intro2">yang hari ini berulang tahun.</div>
+        <div class="intro-text" id="intro3"><strong>Dinda Ardini Larasati</strong></div>
+        <button id="open-button">klik dulu dong</button>
+    </div>
+
+    <main id="main-content">
+        
+        <div class="content-card">
+            <h1>Happy Birthday, My Love!</h1>
+            <p>Happy level-up ke 22. ngga berasa ya, tau² udah nambah umur aja semoga makin waras ngejalanin hidup wkwk, makin glow up luar dalem, dan semua wishlist kamu di umur ini kecentang semua ya</p>
+            <p>Makasi ya udah jadi mood boosterku tiap hari. you literally make my day, every single day</p>
+            <p>Maaf juga kalo selama aku nemenin kamu masih banyak kurangnya, kedepannya aku janji bakal belajar buat jadi lebih baik.</p>
+        </div>
+        
+        <div class="content-card">
+            <h2>Our Memory Lane</h2>
+            <p>Beberapa potongan memori favoritku bareng kamu. Tiap foto ini punya cerita dan alasan kenapa aku makin sayang sama kamu.</p>
+            
+            <div class="gallery-container">
+                <div class="gallery-slide">
+                    <img src="https://ibb.co/0ycnb8j2" alt="Momen 1">
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://i.ibb.co/2v4H3jS/placeholder-2.jpg" alt="Momen 2">
+                </div>
+                <div class="gallery-slide">
+                    <img src="https://i.ibb.co/k2qgJgX/placeholder-3.jpg" alt="Momen 3">
+                </div>
+                
+                <a class="prev gallery-nav">❮</a>
+                <a class="next gallery-nav">❯</a>
+            </div>
+            <div class="dots-container">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h2>My Wish For You</h2>
+            <p>Doaku simpel: semoga kamu selalu dikelilingi kebahagiaan, sehat selalu, dan semua goals dan impianmu tercapai satu per satu. Jangan pernah berhenti bersinar ya, karena kamu adalah bintang paling terang di jagat rayaku.</p>
+            <p>Makasih udah jadi partner terbaik dan alasan aku jadi orang yang lebih baik. I'm so lucky to have you.</p>
+            <br>
+            <p><strong>I Love You to the moon and back! 🫶</strong></p>
+            <h2>Nanda Adam Musthafa</h2>
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // === Star Generation ===
+            const starContainer = document.getElementById('star-container');
+            const numStars = 150;
+            for (let i = 0; i < numStars; i++) {
+                let star = document.createElement('div');
+                star.className = 'star';
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                let size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                starContainer.appendChild(star);
+            }
+
+            // === Intro Animation ===
+            const intro1 = document.getElementById('intro1');
+            const intro2 = document.getElementById('intro2');
+            const intro3 = document.getElementById('intro3');
+            const openButton = document.getElementById('open-button');
+
+            setTimeout(() => { intro1.style.opacity = '1'; intro1.style.transform = 'translateY(0)'; }, 500);
+            setTimeout(() => { intro2.style.opacity = '1'; intro2.style.transform = 'translateY(0)'; }, 1500);
+            setTimeout(() => { intro3.style.opacity = '1'; intro3.style.transform = 'translateY(0)'; }, 2500);
+            setTimeout(() => { openButton.style.opacity = '1'; openButton.style.transform = 'translateY(0)'; }, 3500);
+
+            // === Open Content Action ===
+            const introScreen = document.getElementById('intro-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            openButton.addEventListener('click', () => {
+                introScreen.style.opacity = '0';
+                introScreen.style.transform = 'scale(0.8)';
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    mainContent.style.visibility = 'visible';
+                    mainContent.style.opacity = '1';
+                }, 1500);
+            });
+            
+            // === Gallery Logic ===
+            const prev = document.querySelector('.prev');
+            const next = document.querySelector('.next');
+            let slideIndex = 1;
+
+            showSlides(slideIndex);
+
+            function plusSlides(n) {
+                showSlides(slideIndex += n);
+            }
+
+            function currentSlide(n) {
+                showSlides(slideIndex = n);
+            }
+            
+            prev.addEventListener('click', () => plusSlides(-1));
+            next.addEventListener('click', () => plusSlides(1));
+            
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => currentSlide(index + 1));
+            });
+
+
+            function showSlides(n) {
+                let i;
+                let slides = document.getElementsByClassName("gallery-slide");
+                let dots = document.getElementsByClassName("dot");
+                if (n > slides.length) {slideIndex = 1}
+                if (n < 1) {slideIndex = slides.length}
+                for (i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                }
+                for (i = 0; i < dots.length; i++) {
+                    dots[i].className = dots[i].className.replace(" active", "");
+                }
+                slides[slideIndex-1].style.display = "block";
+                dots[slideIndex-1].className += " active";
+            }
+        });
+    </script>
+</body>
+</html>
